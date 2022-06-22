@@ -110,7 +110,6 @@ while oo:
         list_of_looking_author_songs_ranks=[]
         look_for_author = input("Input author: ")+' '
         continuee=False
-        print(authors)
         for _ in authors:
             if look_for_author==_:
                 continuee=True
