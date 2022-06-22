@@ -1,11 +1,17 @@
+
+
 import requests
 from bs4 import BeautifulSoup
 import copy
+
+
 print(
     "Hi, here is a list of countries you can choose from\n to see top songs of apple music in each of them\n Global, Ukraine, USA, UK, Canada, Mexico, Australia, Japan,\n Spain, France, Germany, South Korea, Armenia, Austria, Costa Rica"
 )
-a = input("Please pick Global or one country: ")
-print(f"Ok, you chose {a}, please wait few seconds")
+
+oo=True
+oo1=True
+
 url_dict = {
     "ukraine": "https://music.apple.com/ae/playlist/top-100-ukraine/pl.815f78effb3844909a8259d759ecbddb",
     "global": "https://music.apple.com/us/playlist/top-100-global/pl.d25f5d1181894928af76c85c967f8f31",
@@ -22,12 +28,17 @@ url_dict = {
     "armenia": "https://music.apple.com/us/playlist/top-100-armenia/pl.42abb2144d594137a8fb4d37a9f35b42",
     "costa rica": "https://music.apple.com/us/playlist/top-100-costa-rica/pl.7771c20fc0354f64a723ae9c11a4d5f5",
 }
-if a.lower() in url_dict.keys():
-    URL = url_dict[a.lower()]
-else:
-    print("Error")
-    quit()
 
+while oo1:
+    a = input("Please pick Global or one country: ")
+    if a.lower() in url_dict.keys():
+        oo1=False
+    else:
+        print("Please, try another country")
+print(f"Ok, you chose {a}, please wait few seconds")
+
+
+URL = url_dict[a.lower()]
 
 def get_html(url, params=None):
     r = requests.get(url)
@@ -54,73 +65,75 @@ def parse():
     else:
         print("Error")
         quit()
+        
 tracks, authors, ranks = parse()
-oo=True
 
+for i in range(len(tracks)):
+    while "  " in authors[i]:
+        authors[i] = authors[i].replace("  ", " ")
+    authors[i] = authors[i].replace("\n", "")
 while oo:
     print("What do you want to know?\n 1 - top 100 \n 2 - top 10 \n 3 - choose 1 place \n 4 - choose 1 author\n 5 - quit")
     choise = int(input("Just type one number: "))
     if choise == 1:
-        for i in range(len(tracks)):
-            while "  " in authors[i]:
-                authors[i] = authors[i].replace("  ", " ")
-            authors[i] = authors[i].replace("\n", "")
+        for i in range(100):
             print(f"{ranks[i]} {tracks[i]} \n  {authors[i]}")
         print(f"\nIf you want to continue type 'YES', \n or if you want to stop type 'NO'")
         yes_no=input()
         if yes_no=="NO":
             oo=False
+            print("Hope that you enjoyed our service!")
     elif choise == 2:
         for i in range(10):
-            while "  " in authors[i]:
-                authors[i] = authors[i].replace("  ", " ")
-            authors[i] = authors[i].replace("\n", "")
             print(f"{ranks[i]} {tracks[i]} \n  {authors[i]}")
         print(f"\nIf you want to continue type 'YES', \n or if you want to stop type 'NO'")
         yes_no=input()
         if yes_no=="NO":
             oo=False
+            print("Hope that you enjoyed our service!")
     elif choise == 3:
         i = int(input("Please, write place in the top: ")) - 1
         if i <= 100:
-            while "  " in authors[i]:
-                authors[i] = authors[i].replace("  ", " ")
-            authors[i] = authors[i].replace("\n", "")
             print(f"track: {tracks[i]} \nauthor: {authors[i]}")
-        print(f"\nIf you want to continue type 'YES', \n or if you want to stop type 'NO'")
-        yes_no=input()
-        if yes_no=="NO":
-            oo=False
+            print(f"\nIf you want to continue type 'YES', \n or if you want to stop type 'NO'")
+            yes_no=input()
+            if yes_no=="NO":
+                oo=False
+            print("Hope that you enjoyed our service!")
+        else:
+            pass
     elif choise == 4:
         authors_copy=copy.copy(authors)
-        for i in range(len(tracks)):
-            while "  " in authors[i]:
-                authors[i]+=' '
-                authors[i] = authors[i].replace("  ", " ")
-            authors[i] = authors[i].replace("\n", "")
+        tracks_copy=copy.copy(tracks)
+        ranks_copy=copy.copy(ranks)
         list_of_looking_author_songs=[]
         list_of_looking_author_songs_ranks=[]
         look_for_author = input("Input author: ")+' '
+        continuee=False
+        print(authors)
         for _ in authors:
-            assume=False
             if look_for_author==_:
-                assume=True
+                continuee=True
                 list_of_looking_author_songs.append(tracks[authors.index(_)])
                 list_of_looking_author_songs_ranks.append(ranks[authors.index(_)])
                 authors.remove(_)
                 tracks.remove(tracks[authors.index(_)])
                 ranks.remove(ranks[authors.index(_)])
+        authors=authors_copy
+        tracks=tracks_copy
+        ranks=ranks_copy
         print("Here is what were you looking for:")
-        if assume:
+        if continuee:
             for j in range(len(list_of_looking_author_songs)):
                 print(f" {list_of_looking_author_songs_ranks[j]} {list_of_looking_author_songs[j]}")
         else:
-            print(f"{look_for_author}is not in the top")
-        aythors=authors_copy
+            print(f" {look_for_author}is not in the top")
+        
         print(f"\nIf you want to continue type 'YES', \n or if you want to stop type 'NO'")
         yes_no=input()
         if yes_no=="NO":
             oo=False
+            print("Hope that you enjoyed our service!")
     elif choise == 5:
         oo=False
         print("Hope that you enjoyed our service!")
