@@ -1,6 +1,4 @@
 import requests
-import copy
-import re
 from bs4 import BeautifulSoup
 
 print(
@@ -25,7 +23,7 @@ url_dict = {
     "costa rica": "https://music.apple.com/us/playlist/top-100-costa-rica/pl.7771c20fc0354f64a723ae9c11a4d5f5",
 }
 if a.lower() in url_dict.keys():
-    URL = url_dict[a]
+    URL = url_dict[a.lower()]
 else:
     print("Error")
     quit()
